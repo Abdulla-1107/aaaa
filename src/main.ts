@@ -11,7 +11,7 @@ async function bootstrap() {
 
   // CORS sozlash
   app.enableCors({
-    origin: ['http://localhost:5173', 'https://your-frontend-domain.com'], // frontend domainlari
+    origin: ['http://localhost:5173', 'https://aaa1-bay.vercel.app'], // frontend domainlari
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true, // agar cookie/token ishlatilsa
   });
