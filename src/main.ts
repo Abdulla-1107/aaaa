@@ -9,6 +9,13 @@ async function bootstrap() {
   // DTO validatsiyasi uchun
   app.useGlobalPipes(new ValidationPipe());
 
+  // CORS sozlash
+  app.enableCors({
+    origin: ['http://localhost:5173', 'https://your-frontend-domain.com'], // frontend domainlari
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    credentials: true, // agar cookie/token ishlatilsa
+  });
+
   // Swagger config
   const config = new DocumentBuilder()
     .setTitle('Fraudster API')
