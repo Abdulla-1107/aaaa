@@ -1,3 +1,3 @@
 -- Active: 1740466750106@@127.0.0.1@5432@ish_top1
 
-CREATE DATABASE firibgar1
+CREATE DATABASE firibgar2
