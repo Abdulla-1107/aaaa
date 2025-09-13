@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreatePassportDto } from './dto/create-passport.dto';
 import { UpdatePassportDto } from './dto/update-passport.dto';
@@ -8,21 +12,24 @@ export class PassportService {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(createPassportDto: CreatePassportDto) {
+    const passport = await this.prisma.passport.findFirst({
+      where: { series: createPassportDto.series },
+    });
+    if (passport) {
+      throw new BadRequestException('Bunday seriya mavjud');
+    }
     return this.prisma.passport.create({
       data: createPassportDto,
     });
   }
 
   async findAll() {
-    return this.prisma.passport.findMany({
-      include: { Fraudsters: true }, // agar Fraudsterlarni ham ko‘rmoqchi bo‘lsang
-    });
+    return this.prisma.passport.findMany();
   }
 
   async findOne(id: string) {
     const passport = await this.prisma.passport.findUnique({
       where: { id },
-      include: { Fraudsters: true },
     });
 
     if (!passport) {
