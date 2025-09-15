@@ -15,6 +15,7 @@ model User {
   phone     String
   role      String?
   Fraudster Fraudster[]
+  Nasiya    Nasiya[]
 }
 
 model Fraudster {
@@ -36,4 +37,24 @@ model Passport {
   id         String      @id @default(uuid())
   series     String      @unique
   Fraudsters Fraudster[]
+  Nasiya     Nasiya[]
+}
+
+model Nasiya {
+  id           String   @id @default(uuid())
+  name         String
+  surname      String
+  phoneNumber  String
+  phoneImei    String
+  productName  String
+  passportId   String
+  Passport     Passport @relation(fields: [passportId], references: [id])
+  passportCode String
+  status       String?
+  userImage    String?
+  productImage String?
+  time         String
+  userId       String
+  User         User     @relation(fields: [userId], references: [id])
+  createdAt    DateTime @default(now())
 }

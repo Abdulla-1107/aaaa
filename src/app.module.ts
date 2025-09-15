@@ -10,6 +10,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { ConfigModule } from '@nestjs/config';
 
 import { join } from 'path';
+import { NasiyaModule } from './nasiya/nasiya.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { join } from 'path';
     PrismaModule,
     FraudsterModule,
     PassportModule,
+    NasiyaModule,
   ],
   controllers: [AppController, UploadController],
   providers: [AppService],
