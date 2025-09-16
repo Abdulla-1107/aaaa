@@ -43,7 +43,7 @@ export class UploadController {
     }
 
     return {
-      image: `https://api.saparboy.uz/${file.filename}`,
+      image: `https://api.saparboy.uz/images/${file.filename}`,
     };
   }
 }

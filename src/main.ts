@@ -2,6 +2,8 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
+import { join } from 'path';
+import * as express from 'express';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -11,10 +13,13 @@ async function bootstrap() {
 
   // CORS sozlash
   app.enableCors({
-    origin: ['http://localhost:5173', 'https://aaa1-bay.vercel.app'], // frontend domainlari
+    origin: ['http://localhost:5173', 'https://aaa1-bay.vercel.app'],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-    credentials: true, // agar cookie/token ishlatilsa
+    credentials: true,
   });
+
+  // 👉 images papkasini public qilish
+  app.use('/images', express.static(join(__dirname, '..', 'images')));
 
   // Swagger config
   const config = new DocumentBuilder()
@@ -33,10 +38,7 @@ async function bootstrap() {
     )
     .build();
 
-  // Swagger hujjatini yaratish
   const document = SwaggerModule.createDocument(app, config);
-
-  // Swagger UI ni sozlash
   SwaggerModule.setup('api', app, document);
 
   await app.listen(process.env.PORT ?? 3000);
