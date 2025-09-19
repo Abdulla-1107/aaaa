@@ -13,7 +13,11 @@ async function bootstrap() {
 
   // CORS sozlash
   app.enableCors({
-    origin: ['http://localhost:5173', 'https://aaa1-bay.vercel.app'],
+    origin: [
+      'http://localhost:5173',
+      'https://aaa1-bay.vercel.app',
+      'https://tegstop-real.vercel.app',
+    ],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
   });
