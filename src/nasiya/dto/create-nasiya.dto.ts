@@ -65,6 +65,20 @@ export class CreateNasiyaDto {
   @Min(1)
   time: number;
 
+  // ✅ Boshlang‘ich to‘lov
+  @ApiProperty({ example: 200, description: 'Boshlang‘ich to‘lov summasi' })
+  @Type(() => Number)
+  @IsNumber()
+  @Min(0)
+  downPayment: number;
+
+  // ✅ Oylik to‘lov
+  @ApiProperty({ example: 150, description: 'Oylik to‘lov summasi' })
+  @Type(() => Number)
+  @IsNumber()
+  @Min(1)
+  monthlyPayment: number;
+
   @ApiHideProperty()
   status: NasiyaStatus = NasiyaStatus.PENDING;
 

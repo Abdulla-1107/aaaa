@@ -34,6 +34,8 @@ export class NasiyaService {
         productImage: createNasiyaDto.productImage,
         time: createNasiyaDto.time.toString(),
         status: NasiyaStatus.PENDING,
+        downPayment: createNasiyaDto.downPayment,
+        monthlyPayment: createNasiyaDto.monthlyPayment,
         userId,
       },
     });
