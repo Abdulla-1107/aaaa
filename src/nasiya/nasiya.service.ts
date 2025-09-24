@@ -21,6 +21,17 @@ export class NasiyaService {
     if (!passport) {
       throw new NotFoundException('passport topilmadi Id si');
     }
+    const data = await this.prisma.nasiya.findFirst({
+      where: {
+        passportCode: createNasiyaDto.passportCode,
+        passportId: createNasiyaDto.passportId,
+      },
+    });
+    if (data) {
+      throw new ForbiddenException(
+        'Ushbu foydalanuvchi nasiya savdodan foydalanmoqda !',
+      );
+    }
     return this.prisma.nasiya.create({
       data: {
         name: createNasiyaDto.name,
