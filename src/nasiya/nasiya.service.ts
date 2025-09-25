@@ -127,6 +127,13 @@ export class NasiyaService {
     return data;
   }
 
+  async countByUser(userId: string): Promise<{ count: number }> {
+    const count = await this.prisma.nasiya.count({
+      where: { userId },
+    });
+    return { count };
+  }
+
   async findMy(userId: string, query: GetMyNasiyaDto) {
     try {
       console.log('User ID:', userId);

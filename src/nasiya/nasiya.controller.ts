@@ -14,7 +14,7 @@ import {
 import { NasiyaService } from './nasiya.service';
 import { CreateNasiyaDto } from './dto/create-nasiya.dto';
 import { UpdateNasiyaDto } from './dto/update-nasiya.dto';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { NasiyaQueryDto } from './dto/query-dto';
 import { GetMyNasiyaDto } from './dto/dto';
@@ -50,6 +50,14 @@ export class NasiyaController {
       throw new UnauthorizedException('User ID topilmadi');
     }
     return this.nasiyaService.findMy(userId, query);
+  }
+
+  @Get('my-count')
+  @UseGuards(AuthGuard)
+  @ApiOperation({ summary: 'Foydalanuvchining mijozlar soni' })
+  async getMyCount(@Req() req: any) {
+    const userId = req['user'].sub;
+    return this.nasiyaService.countByUser(userId);
   }
 
   @Get(':id')
