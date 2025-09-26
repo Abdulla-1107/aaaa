@@ -9,6 +9,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { NasiyaStatus } from 'src/enums/nasiya';
 import { NasiyaQueryDto } from './dto/query-dto';
 import { GetMyNasiyaDto } from './dto/dto';
+import { SearchQuery } from './dto/search.dto';
 
 @Injectable()
 export class NasiyaService {
@@ -132,6 +133,26 @@ export class NasiyaService {
       where: { userId },
     });
     return { count };
+  }
+
+  async getSearch(search: SearchQuery) {
+    const checkNasiya = await this.prisma.nasiya.findFirst({
+      where: {
+        passportId: search.passportId,
+        passportCode: search.passportCode,
+      },
+      include: {
+        User: { select: { name: true, username: true } },
+        Passport: true,
+      },
+    });
+
+    if (!checkNasiya) {
+      throw new NotFoundException(
+        'Ushbu shaxs nasiya savdodan foydalanmayapti',
+      );
+    }
+    return { checkNasiya};
   }
 
   async findMy(userId: string, query: GetMyNasiyaDto) {

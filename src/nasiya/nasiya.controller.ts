@@ -19,6 +19,7 @@ import { AuthGuard } from 'src/auth/auth.guard';
 import { NasiyaQueryDto } from './dto/query-dto';
 import { GetMyNasiyaDto } from './dto/dto';
 import { log } from 'console';
+import { SearchQuery } from './dto/search.dto';
 
 @ApiBearerAuth('access-token')
 @Controller('nasiya')
@@ -58,6 +59,11 @@ export class NasiyaController {
   async getMyCount(@Req() req: any) {
     const userId = req['user'].sub;
     return this.nasiyaService.countByUser(userId);
+  }
+
+  @Get('nasiya/search')
+  async getNasiyaSearch(@Query() search: SearchQuery) {
+    return this.nasiyaService.getSearch(search);
   }
 
   @Get(':id')
