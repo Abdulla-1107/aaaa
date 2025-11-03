@@ -1,53 +1,37 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsNotEmpty,
-  IsOptional,
   IsString,
-  IsUUID,
   Length,
-  IsUrl,
+  IsEnum,
+  IsOptional,
 } from 'class-validator';
+import { PassportSeriya, Type } from 'src/enums/passport';
 
 export class CreateFraudsterDto {
   @ApiProperty({ example: 'Ali', description: 'Firibgar ismi' })
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   name: string;
 
   @ApiProperty({ example: 'Valiyev', description: 'Firibgar familiyasi' })
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   surname: string;
 
   @ApiProperty({
-    example: 'https://example.com/image.png',
-    description: 'Rasm URL manzili',
-    required: false,
+    example: 'AD',
+    description: 'Passport seriyasi',
   })
-  @IsOptional()
-  @IsUrl({}, { message: 'Rasm URL noto‘g‘ri formatda kiritilgan' })
-  image: string;
-
-  @ApiProperty({
-    example: 'uuid-passport-id',
-    description: 'Passport seriyasining ID si',
-  })
-  @IsUUID()
-  passportId: string;
+  @IsEnum(PassportSeriya)
+  passportSeriya: string;
 
   @ApiProperty({ example: '1234567', description: 'Pasportning raqam qismi' })
   @IsString()
   @Length(7, 7, { message: 'passportCode 7 ta belgidan iborat bo‘lishi kerak' })
   passportCode: string;
 
-  @ApiProperty({ example: 'Toshkent', description: 'Manzili' })
-  @IsString()
-  location: string;
-
-  @ApiProperty({
-    example: 'Firibgarlik qilganlikda gumon qilinmoqda',
-    description: 'Izoh',
-  })
-  @IsString()
-  description: string;
+  @ApiProperty({ example: 'NasiyaMijoz' })
+  @IsEnum(Type)
+  type: string;
 }

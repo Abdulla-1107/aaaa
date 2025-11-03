@@ -15,49 +15,16 @@ model User {
   phone     String
   role      String?
   Fraudster Fraudster[]
-  Nasiya    Nasiya[]
 }
 
 model Fraudster {
-  id           String   @id @default(uuid())
-  name         String
-  surname      String
-  image        String
-  passportId   String
-  passport     Passport @relation(fields: [passportId], references: [id])
-  passportCode String
-  location     String?
-  description  String?
-  userId       String
-  user         User     @relation(fields: [userId], references: [id])
-  createdAt    DateTime @default(now())
-}
-
-model Passport {
-  id         String      @id @default(uuid())
-  series     String      @unique
-  Fraudsters Fraudster[]
-  Nasiya     Nasiya[]
-}
-
-model Nasiya {
   id             String   @id @default(uuid())
-  name           String
-  surname        String
-  phoneNumber    String
-  phoneImei      String
-  productName    String
-  passportId     String
-  Passport       Passport @relation(fields: [passportId], references: [id])
+  name           String?
+  surname        String?
+  passportSeriya String
   passportCode   String
-  status         String?
-  userImage      String?
-  productImage   String?
-  time           String
-  downPayment    Decimal?
-  monthlyPayment Decimal?
-
-  userId    String
-  User      User     @relation(fields: [userId], references: [id])
-  createdAt DateTime @default(now())
+  type           String
+  userId         String
+  user           User     @relation(fields: [userId], references: [id])
+  createdAt      DateTime @default(now())
 }

@@ -4,13 +4,10 @@ import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { FraudsterModule } from './fraudster/fraudster.module';
-import { PassportModule } from './passport/passport.module';
 import { UploadController } from './upload/upload.controller';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { ConfigModule } from '@nestjs/config';
-
 import { join } from 'path';
-import { NasiyaModule } from './nasiya/nasiya.module';
 
 @Module({
   imports: [
@@ -25,8 +22,6 @@ import { NasiyaModule } from './nasiya/nasiya.module';
     UserModule,
     PrismaModule,
     FraudsterModule,
-    PassportModule,
-    NasiyaModule,
   ],
   controllers: [AppController, UploadController],
   providers: [AppService],

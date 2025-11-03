@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ForbiddenException,
   Injectable,
   NotFoundException,
@@ -13,36 +14,39 @@ export class FraudsterService {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(createFraudsterDto: CreateFraudsterDto, userId: string) {
-    // Passport mavjudligini tekshirish
-    const passport = await this.prisma.passport.findFirst({
-      where: { id: createFraudsterDto.passportId },
+    const { name, surname, passportSeriya, passportCode, type } =
+      createFraudsterDto;
+
+    const check = await this.prisma.fraudster.findFirst({
+      where: { passportCode: createFraudsterDto.passportCode },
     });
 
-    if (!passport) {
-      throw new Error(`Passport topilmadi: ${createFraudsterDto.passportId}`);
+    if (check) {
+      throw new BadRequestException(
+        "Ushbu passportga tegishli ma'lumot yaratilgan",
+      );
     }
 
-    // Fraudster yaratish
-    return this.prisma.fraudster.create({
+    const fraudster = await this.prisma.fraudster.create({
       data: {
-        name: createFraudsterDto.name,
-        surname: createFraudsterDto.surname,
-        image: createFraudsterDto.image,
-        passportId: createFraudsterDto.passportId, // faqat passportId
-        passportCode: createFraudsterDto.passportCode,
-        location: createFraudsterDto.location,
-        description: createFraudsterDto.description,
-        userId, // bu yerda token orqali keladi
-      },
-      include: {
-        passport: true, // passportni join qilib ko‘rsatadi
+        name,
+        surname,
+        passportSeriya,
+        passportCode,
+        type,
+        userId,
       },
     });
+
+    return {
+      message: 'Muvaffaqiyatli qo‘shildi ✅',
+      data: fraudster,
+    };
   }
 
   async findAll(query: FraudsterQueryDto) {
     try {
-      let { search, passportCode, location, page = 1, limit = 10 } = query;
+      let { search, passportCode, page = 1, limit = 10 } = query;
 
       // Xavfsizlik uchun type tekshiruvlar
       page = Number(page) > 0 ? Number(page) : 1;
@@ -60,13 +64,9 @@ export class FraudsterService {
                 }
               : {},
             passportCode ? { passportCode: { contains: passportCode } } : {},
-            location
-              ? { location: { contains: location, mode: 'insensitive' } }
-              : {},
           ],
         },
         include: {
-          passport: true,
           user: { select: { id: true, name: true, username: true } },
         },
         skip: (page - 1) * limit,
@@ -85,9 +85,6 @@ export class FraudsterService {
                 }
               : {},
             passportCode ? { passportCode: { contains: passportCode } } : {},
-            location
-              ? { location: { contains: location, mode: 'insensitive' } }
-              : {},
           ],
         },
       });
@@ -110,7 +107,7 @@ export class FraudsterService {
   async findOne(id: string) {
     const fraudster = await this.prisma.fraudster.findFirst({
       where: { id },
-      include: { passport: true, user: { select: { name: true } } },
+      include: {user: true}
     });
 
     if (!fraudster) {
@@ -136,7 +133,6 @@ export class FraudsterService {
     return this.prisma.fraudster.update({
       where: { id },
       data: updateFraudsterDto,
-      include: { passport: true },
     });
   }
 
@@ -162,11 +158,29 @@ export class FraudsterService {
   }
 
   // 🔹 Foydalanuvchi qo‘shganlari soni
-  async countByUser(userId: string): Promise<{ count: number }> {
-    const count = await this.prisma.fraudster.count({
-      where: { userId },
-    });
-    return { count };
+  async countByUser(userId: string): Promise<{ count: number; data: any[] }> {
+    const [count, data] = await Promise.all([
+      this.prisma.fraudster.count({
+        where: { userId },
+      }),
+
+      this.prisma.fraudster.findMany({
+        where: { userId },
+        select: {
+          id: true,
+          name: true,
+          surname: true,
+          passportCode: true,
+          passportSeriya: true,
+          type: true,
+          createdAt: true,
+          // kerak bo‘lsa boshqa maydonlarni ham yozing
+        },
+        orderBy: { createdAt: 'desc' }, // eng oxirgi qo‘shilganlari yuqorida
+      }),
+    ]);
+
+    return { count, data };
   }
 
   // 🔹 Bugun qo‘shilganlari soni

@@ -19,13 +19,6 @@ export class FraudsterQueryDto {
   passportCode?: string;
 
   @ApiPropertyOptional({
-    description: 'Manzil bo‘yicha filter',
-  })
-  @IsOptional()
-  @IsString()
-  location?: string;
-
-  @ApiPropertyOptional({
     description: 'Sahifa raqami (pagination)',
     example: 1,
   })
