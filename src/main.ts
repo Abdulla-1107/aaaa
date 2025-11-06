@@ -15,8 +15,8 @@ async function bootstrap() {
   app.enableCors({
     origin: [
       'http://localhost:5173',
-      'https://aaa1-bay.vercel.app',
-      'https://tegstop-real.vercel.app',
+      'https://tegstop.vercel.app',
+      'https://tegstop.uz',
     ],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
