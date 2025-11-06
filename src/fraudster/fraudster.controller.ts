@@ -17,6 +17,7 @@ import { UpdateFraudsterDto } from './dto/update-fraudster.dto';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { FraudsterQueryDto } from './dto/query';
 import { AuthGuard } from 'src/auth/auth.guard';
+import { SearchQueryDto } from './dto/Search';
 
 @ApiBearerAuth('access-token')
 @ApiTags('Fraudster')
@@ -43,6 +44,10 @@ export class FraudsterController {
   })
   findAll(@Query() query: FraudsterQueryDto) {
     return this.fraudsterService.findAll(query);
+  }
+  @Get('search')
+  getSearch(@Query() query: SearchQueryDto) {
+    return this.fraudsterService.getSearchData(query);
   }
 
   // 🔹 Jami fraudsterlar soni

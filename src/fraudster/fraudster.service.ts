@@ -8,6 +8,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreateFraudsterDto } from './dto/create-fraudster.dto';
 import { UpdateFraudsterDto } from './dto/update-fraudster.dto';
 import { FraudsterQueryDto } from './dto/query';
+import { SearchQueryDto } from './dto/Search';
 
 @Injectable()
 export class FraudsterService {
@@ -107,7 +108,7 @@ export class FraudsterService {
   async findOne(id: string) {
     const fraudster = await this.prisma.fraudster.findFirst({
       where: { id },
-      include: {user: true}
+      include: { user: true },
     });
 
     if (!fraudster) {
@@ -181,6 +182,17 @@ export class FraudsterService {
     ]);
 
     return { count, data };
+  }
+
+  async getSearchData(query: SearchQueryDto) {
+    const { passportSeriya, passportCode } = query;
+
+    return await this.prisma.fraudster.findMany({
+      where: {
+        passportSeriya,
+        passportCode,
+      },
+    });
   }
 
   // 🔹 Bugun qo‘shilganlari soni
