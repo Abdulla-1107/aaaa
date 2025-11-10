@@ -85,6 +85,7 @@ export class FraudsterService {
                   ],
                 }
               : {},
+
             passportCode ? { passportCode: { contains: passportCode } } : {},
           ],
         },
@@ -177,21 +178,25 @@ export class FraudsterService {
           createdAt: true,
           // kerak bo‘lsa boshqa maydonlarni ham yozing
         },
+
         orderBy: { createdAt: 'desc' }, // eng oxirgi qo‘shilganlari yuqorida
       }),
     ]);
 
     return { count, data };
   }
-
   async getSearchData(query: SearchQueryDto) {
     const { passportSeriya, passportCode } = query;
 
     return await this.prisma.fraudster.findMany({
       where: {
-        passportSeriya,
-        passportCode,
+        ...(passportSeriya && { passportSeriya }),
+        ...(passportCode && { passportCode }),
       },
+      include: {
+        user: true,
+      },
+      orderBy: { createdAt: 'desc' },
     });
   }
 

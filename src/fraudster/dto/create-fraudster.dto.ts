@@ -5,6 +5,7 @@ import {
   Length,
   IsEnum,
   IsOptional,
+  Max,
 } from 'class-validator';
 import { PassportSeriya, Type } from 'src/enums/passport';
 
@@ -34,4 +35,8 @@ export class CreateFraudsterDto {
   @ApiProperty({ example: 'NasiyaMijoz' })
   @IsEnum(Type)
   type: string;
+
+  @IsOptional()
+  @Max(13)
+  time: number;
 }

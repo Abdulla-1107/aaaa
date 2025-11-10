@@ -21,18 +21,21 @@ import { ApiBearerAuth } from '@nestjs/swagger';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @Get('/profile')
+  @UseGuards(AuthGuard)
+  async getProfile(@Req() req: Request) {
+    console.log(req['user']); // token ichidagi payloadni ko‘ramiz
+    const userId = req['user'].sub || req['user'].userId;
+    console.log(userId);
+
+    return this.userService.me(userId);
+  }
   // Register (foydalanuvchi yaratish)
   @Post('register')
   create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
   }
 
-  @Get('profile')
-  @UseGuards(AuthGuard)
-  async getProfile(@Req() req: Request) {
-    const userId = req['user'].id; // payload ichidan id
-    return this.userService.me(userId);
-  }
   // Login (token olish)
   @Post('login')
   login(@Body() loginUserDto: LoginUserDto) {

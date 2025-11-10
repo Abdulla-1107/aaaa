@@ -25,6 +25,7 @@ model Fraudster {
   passportCode   String
   type           String
   userId         String
+  time           Int?
   user           User     @relation(fields: [userId], references: [id])
   createdAt      DateTime @default(now())
 }

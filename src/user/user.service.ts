@@ -113,8 +113,9 @@ export class UserService {
     return deleteUser;
   }
 
-  async me(userId: string) {
-    const user = await this.prisma.user.findFirst({ where: { id: userId } });
-    return { data: user };
+  async me(id: string) {
+    return this.prisma.user.findUnique({
+      where: { id },
+    });
   }
 }
