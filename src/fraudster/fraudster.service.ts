@@ -15,19 +15,24 @@ export class FraudsterService {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(createFraudsterDto: CreateFraudsterDto, userId: string) {
-    const { name, surname, passportSeriya, passportCode, type } =
+    const { name, surname, passportSeriya, passportCode, type, time } =
       createFraudsterDto;
 
-    const check = await this.prisma.fraudster.findFirst({
-      where: { passportCode: createFraudsterDto.passportCode },
+    // Passport code va seriyasini tekshirish
+    const existing = await this.prisma.fraudster.findFirst({
+      where: {
+        passportCode,
+        passportSeriya,
+      },
     });
 
-    if (check) {
+    if (existing) {
       throw new BadRequestException(
-        "Ushbu passportga tegishli ma'lumot yaratilgan",
+        "Ushbu passport seriya va kodi bilan ma'lumot allaqachon yaratilgan",
       );
     }
 
+    // Fraudster yaratish
     const fraudster = await this.prisma.fraudster.create({
       data: {
         name,
@@ -36,6 +41,7 @@ export class FraudsterService {
         passportCode,
         type,
         userId,
+        time: type === 'NasiyaMijoz' ? time : null,
       },
     });
 
